@@ -1,44 +1,40 @@
 package br.com.fujideia.iesp.tecback.controller;
 
 import br.com.fujideia.iesp.tecback.model.Filme;
-import br.com.fujideia.iesp.tecback.repository.FilmeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.fujideia.iesp.tecback.service.FilmeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/filmes")
 public class FilmeController {
 
-    @Autowired
-    private FilmeRepository filmeRepository;
+    private final FilmeService service;
 
     @GetMapping
     public List<Filme> listarTodos() {
-        return filmeRepository.findAll();
+        return service.listar();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Filme> buscarPorId(@PathVariable Long id) {
-        Optional<Filme> filme = filmeRepository.findById(id);
-        if (filme.isPresent()) {
-            return ResponseEntity.ok(filme.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+
+        return ResponseEntity.ok(service.buscarPorId(id));
     }
 
     @PostMapping
     public Filme criarFilme(@RequestBody Filme filme) {
-        return filmeRepository.save(filme);
+        return service.c;
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Filme> atualizarFilme(@PathVariable Long id, @RequestBody Filme filmeDetalhes) {
-        Optional<Filme> filmeOptional = filmeRepository.findById(id);
+        Optional<Filme> filmeOptional = service.findById(id);
         if (filmeOptional.isPresent()) {
             Filme filme = filmeOptional.get();
             filme.setTitulo(filmeDetalhes.getTitulo());
@@ -46,7 +42,7 @@ public class FilmeController {
             filme.setDiretor(filmeDetalhes.getDiretor());
             filme.setAtores(filmeDetalhes.getAtores());
             filme.setGeneros(filmeDetalhes.getGeneros());
-            Filme filmeAtualizado = filmeRepository.save(filme);
+            Filme filmeAtualizado = service.save(filme);
             return ResponseEntity.ok(filmeAtualizado);
         } else {
             return ResponseEntity.notFound().build();
@@ -55,8 +51,8 @@ public class FilmeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarFilme(@PathVariable Long id) {
-        if (filmeRepository.existsById(id)) {
-            filmeRepository.deleteById(id);
+        if (service.existsById(id)) {
+            service.deleteById(id);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
