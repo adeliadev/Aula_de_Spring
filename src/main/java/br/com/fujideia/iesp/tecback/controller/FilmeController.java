@@ -7,45 +7,44 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/filmes")
+@RequiredArgsConstructor
 public class FilmeController {
 
-    private final FilmeService service;
+    private final FilmeService filmeService;
 
     @GetMapping
     public List<Filme> listarTodos() {
-        return service.listar();
+        return filmeService.listar();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Filme> buscarPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(service.buscarPorId(id));
+        Optional<Filme> filme = filmeService.buscarPorId(id);
+        return filme.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Filme criarFilme(@RequestBody Filme filme) {
-        return service.criarFilme(filme);
+    public ResponseEntity<Filme> criarFilme(@RequestBody Filme filme) {
+        Filme filmeCriado = filmeService.criarFilme(filme);
+        return ResponseEntity.ok(filmeCriado);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Filme> atualizarFilme(@PathVariable Long id, @RequestBody Filme filmeDetalhes) {
-        try {
-            Filme filmeAtualizado = service.atualizarFilme(id, filmeDetalhes);
-            return ResponseEntity.ok(filmeAtualizado);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        Optional<Filme> filmeAtualizado = filmeService.atualizarFilme(id, filmeDetalhes);
+        return filmeAtualizado.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarFilme(@PathVariable Long id) {
-        try {
-            service.deletarFilme(id);
+        boolean deletado = filmeService.deletarFilme(id);
+        if (deletado) {
             return ResponseEntity.noContent().build();
-        } catch (RuntimeException e){
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
