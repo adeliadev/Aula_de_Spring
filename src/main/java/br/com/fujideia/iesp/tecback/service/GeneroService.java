@@ -61,4 +61,8 @@ public class GeneroService {
         genero.setNome(generoDTO.getNome());
         return genero;
     }
+
+    public Genero buscarGeneroPorNome(String nome) {
+        return generoRepository.buscarGeneroPorNome(nome);
+    }
 }

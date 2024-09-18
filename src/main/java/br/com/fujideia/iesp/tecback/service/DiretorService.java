@@ -61,4 +61,8 @@ public class DiretorService {
         diretor.setNome(diretorDTO.getNome());
         return diretor;
     }
+
+    public List<Diretor> listarDiretorPorNome(String nome) {
+        return diretorRepository.listarDiretorPorNome(nome);
+    }
 }

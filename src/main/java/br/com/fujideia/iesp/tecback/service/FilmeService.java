@@ -114,4 +114,16 @@ public class FilmeService {
                 .map(this::convertToEntity)
                 .collect(Collectors.toList()));
     }
+
+    public List<Filme> buscarFilmePorNome(String nome) {
+        return filmeRepository.buscarFilmePorNome(nome);
+    }
+
+    public List<Filme> listarFilmesPorAno(Integer ano) {
+        return filmeRepository.listarFilmesPorAno(ano);
+    }
+
+    public List<Filme> buscarPorNomeIniciadoCom(String letraInicial) {
+        return filmeRepository.buscarFilmeComNomeIniciadoPor(letraInicial);
+    }
 }

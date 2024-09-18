@@ -62,7 +62,7 @@ public class AtorService {
         return ator;
     }
 
-    public List<AtorDTO> buscarPorNomeIniciadoCom(String letraInicial) {
+    public List<Ator> buscarPorNomeIniciadoCom(String letraInicial) {
         return atorRepository.buscarPorNomeIniciadoCom(letraInicial);
     }
 
