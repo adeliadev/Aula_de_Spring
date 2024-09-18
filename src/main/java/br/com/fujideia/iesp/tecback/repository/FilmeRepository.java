@@ -11,10 +11,13 @@ import java.util.List;
 @Repository
 public interface FilmeRepository extends JpaRepository<Filme, Long> {
 
+    @Query("select f from Filme f where f.titulo=:titulo")
+    List<Filme> buscarFilmePorNome(@Param("titulo") String titulo);
+
     @Query("select f from Filme f where f.anoLancamento=:ano")
     List<Filme> listarFilmesPorAno(@Param("ano") Integer ano);
 
     @Query("select f from Filme f where f.titulo like :titulo%")
-    List<Filme> buscarPorNomeIniciadoCom(@Param("titulo") String titulo);
+    List<Filme> buscarFilmeComNomeIniciadoPor(@Param("titulo") String titulo);
 
 }

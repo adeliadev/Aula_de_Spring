@@ -8,5 +8,5 @@ import org.springframework.data.repository.query.Param;
 public interface GeneroRepository extends JpaRepository<Genero, Long> {
 
     @Query("select g from Genero g where g.nome=:nome")
-    Genero listarGeneroPorNome(@Param("nome") String nome);
+    Genero buscarGeneroPorNome(@Param("nome") String nome);
 }
