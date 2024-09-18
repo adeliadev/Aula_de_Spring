@@ -1,6 +1,7 @@
 package br.com.fujideia.iesp.tecback.controller;
 
 import br.com.fujideia.iesp.tecback.model.Genero;
+import br.com.fujideia.iesp.tecback.model.dto.GeneroDTO;
 import br.com.fujideia.iesp.tecback.service.GeneroService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,25 +17,30 @@ public class GeneroController {
     private final GeneroService generoService;
 
     @GetMapping
-    public List<Genero> listarTodos() {
-        return generoService.listar();
+    public List<GeneroDTO> listarTodos() {
+        return generoService.listarTodos();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Genero> buscarPorId(@PathVariable Long id) {
-        Optional<Genero> genero = generoService.buscarPorId(id);
+    public ResponseEntity<GeneroDTO> buscarPorId(@PathVariable Long id) {
+        Optional<GeneroDTO> genero = generoService.buscarPorId(id);
         return genero.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/buscar/{nome}")
+    public Genero buscarGeneroPorNome(@PathVariable String nome) {
+        return generoService.buscarGeneroPorNome(nome);
+    }
+
     @PostMapping
-    public ResponseEntity<Genero> criarGenero(@RequestBody Genero genero) {
-        Genero generoCriado = generoService.criarGenero(genero);
+    public ResponseEntity<GeneroDTO> criarGenero(@RequestBody GeneroDTO genero) {
+        GeneroDTO generoCriado = generoService.criarGenero(genero);
         return ResponseEntity.ok(generoCriado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Genero> atualizarGenero(@PathVariable Long id, @RequestBody Genero generoDetalhes) {
-        Optional<Genero> generoAtualizado = generoService.atualizarGenero(id, generoDetalhes);
+    public ResponseEntity<GeneroDTO> atualizarGenero(@PathVariable Long id, @RequestBody Genero generoDetalhes) {
+        Optional<GeneroDTO> generoAtualizado = generoService.atualizarGenero(id, generoDetalhes);
         return generoAtualizado.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
